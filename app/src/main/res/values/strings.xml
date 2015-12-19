@@ -52,6 +52,7 @@
     // Urls
     <string name="getOrgTypeUrl">http://124.153.111.70:8080/project-1.0.0-BUILD-SNAPSHOT/getOrgType</string>
     <string name="registrationUrl">/project-1.0.0-BUILD-SNAPSHOT/registration</string>
+    <string name="sighnUpUrl">/project-1.0.0-BUILD-SNAPSHOT/signup</string>
     <string name="ok">OK</string>
 
 </resources>

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
+import com.example.pojo.UserAccountModel;
 import com.example.pojo.UsersRegistrationStatus;
 import com.example.pojo.UsersRegistrationStatustDeserializer;
 import com.google.gson.Gson;
@@ -166,5 +167,99 @@ public class ApiRequests
         gsonPostRequest.setShouldCache(false);
         Log.i("RegistrationRes",gsonPostRequest.getBody().toString());
         return gsonPostRequest;
+    }
+
+
+
+
+
+
+    public static GsonPutRequest getPayObjectArrayWithPut
+            (
+                    @NonNull final Response.Listener<UsersRegistrationStatus> listener,
+                    @NonNull final Response.ErrorListener errorListener,
+                    final UserAccountModel userAccountModel,
+                    String signUpURL
+            )
+    {
+        final String url = BuildConfig.apiDomainName + signUpURL;
+        String s =null;
+
+        final JsonObject registerParams = new JsonObject();
+        if (userAccountModel.getPublicAccount()!=null) {
+            registerParams.addProperty("emil", userAccountModel.getEmail());
+            registerParams.addProperty("mobileNumber", userAccountModel.getMobileNumber());
+            registerParams.addProperty("registrationTypeId", userAccountModel.getPublicAccount().getRegistrationTypeId());
+            registerParams.addProperty("registeredCompanyName", s);
+            registerParams.addProperty("brandName", s);
+            registerParams.addProperty("bankAccountNumber", s);
+            registerParams.addProperty("ifsc", s);
+            registerParams.addProperty("pan", userAccountModel.getPublicAccount().getPanNo());
+            registerParams.addProperty("customerName", userAccountModel.getPublicAccount().getFullName());
+            registerParams.addProperty("address", userAccountModel.getPublicAccount().getAddress());
+            registerParams.addProperty("registeredCompanyId", s);
+            registerParams.addProperty("cardDetails", s);
+        }
+        else if (userAccountModel.getVendorAccount()!=null) {
+            registerParams.addProperty("emil", userAccountModel.getEmail());
+            registerParams.addProperty("mobileNumber", userAccountModel.getMobileNumber());
+            registerParams.addProperty("registrationTypeId", userAccountModel.getVendorAccount().getRegistrationTypeId());
+            registerParams.addProperty("registeredCompanyName", userAccountModel.getVendorAccount().getRegisteredCompanyName());
+            registerParams.addProperty("brandName", userAccountModel.getVendorAccount().getRegisteredCompanyBrandName());
+            registerParams.addProperty("bankAccountNumber", userAccountModel.getVendorAccount().getBankAccountNumber());
+            registerParams.addProperty("ifsc", userAccountModel.getVendorAccount().getIfsc());
+            registerParams.addProperty("pan", userAccountModel.getVendorAccount().getPanNo());
+            registerParams.addProperty("customerName", s);
+            registerParams.addProperty("address", s);
+            registerParams.addProperty("registeredCompanyId", s);
+            registerParams.addProperty("cardDetails", s);
+        }
+        else if (userAccountModel.getPrivilegeVendorAccount()!=null) {
+            registerParams.addProperty("emil", userAccountModel.getEmail());
+            registerParams.addProperty("mobileNumber", userAccountModel.getMobileNumber());
+            registerParams.addProperty("registrationTypeId", userAccountModel.getPrivilegeVendorAccount().getRegistrationTypeId());
+            registerParams.addProperty("registeredCompanyName", s);
+            registerParams.addProperty("brandName", userAccountModel.getPrivilegeVendorAccount().getRegisteredCompanyBrandName());
+            registerParams.addProperty("bankAccountNumber", userAccountModel.getPrivilegeVendorAccount().getBankAccountNumber());
+            registerParams.addProperty("ifsc", userAccountModel.getPrivilegeVendorAccount().getIfsc());
+            registerParams.addProperty("pan", userAccountModel.getPrivilegeVendorAccount().getPanNo());
+            registerParams.addProperty("customerName", s);
+            registerParams.addProperty("address", s);
+            registerParams.addProperty("registeredCompanyId", userAccountModel.getPrivilegeVendorAccount().getRegisteredCompanyID());
+            registerParams.addProperty("cardDetails", s);
+        }
+
+
+        Log.i("registerParams", "" + registerParams.toString());
+
+        final GsonPutRequest gsonPutRequest = new GsonPutRequest<UsersRegistrationStatus>
+                (
+                        url,
+                        registerParams.toString(),
+                        new TypeToken<UsersRegistrationStatus>() {}.getType(),
+                        gson,
+                        listener,
+                        errorListener
+                )
+        {
+            @Override
+            public Map<String, String> getHeaders () throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                //Content-Type: application/json
+                params.put("Content-Type", "application/json");
+                //params.put("Accept-Language", "fr");
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getParams() {
+                return null;
+            }
+        };
+
+        gsonPutRequest.setShouldCache(false);
+        Log.i("RegistrationRes",gsonPutRequest.getBody().toString());
+        return gsonPutRequest;
     }
 }

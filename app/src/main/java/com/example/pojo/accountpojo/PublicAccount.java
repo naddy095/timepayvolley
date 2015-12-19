@@ -5,6 +5,7 @@ package com.example.pojo.accountpojo;
  */
 public class PublicAccount {
 
+    private Integer registrationTypeId=1;
     private String cardType;
     private String cardBankName;
     private String nameOfCardholder;
@@ -13,8 +14,9 @@ public class PublicAccount {
     private String cardNumber;
     private String fullName;
     private String address;
+    private String panNo;
 
-    public PublicAccount(String cardType, String cardBankName, String nameOfCardholder, String expiryDate, String validFrom, String cardNumber, String fullName, String address) {
+    public PublicAccount(String cardType, String cardBankName, String nameOfCardholder, String expiryDate, String validFrom, String cardNumber, String fullName, String address,String panNo) {
         this.cardType = cardType;
         this.cardBankName = cardBankName;
         this.nameOfCardholder = nameOfCardholder;
@@ -23,6 +25,7 @@ public class PublicAccount {
         this.cardNumber = cardNumber;
         this.fullName = fullName;
         this.address = address;
+        this.panNo = panNo;
     }
 
     public String getCardType() {
@@ -87,5 +90,21 @@ public class PublicAccount {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPanNo() {
+        return panNo;
+    }
+
+    public void setPanNo(String panNo) {
+        this.panNo = panNo;
+    }
+
+    public Integer getRegistrationTypeId() {
+        return registrationTypeId;
+    }
+
+    public void setRegistrationTypeId(Integer registrationTypeId) {
+        this.registrationTypeId = registrationTypeId;
     }
 }

@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +20,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.example.base.App;
+import com.example.network.ApiRequests;
+import com.example.network.GsonPutRequest;
+import com.example.pojo.UserAccountModel;
+import com.example.pojo.UsersRegistrationStatus;
+import com.example.pojo.accountpojo.PublicAccount;
+import com.example.pojo.accountpojo.VendorAccount;
 
 import java.io.File;
 
@@ -34,6 +45,7 @@ public class VendorRegistration extends ActionBarActivity implements View.OnClic
     ImageView imageOfPANCard;
     Intent builderIntent;
     TextView paymentGatewayLink,searchIFSCCode;
+    UserAccountModel _UserAccountModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +69,7 @@ public class VendorRegistration extends ActionBarActivity implements View.OnClic
         searchIFSCCode = (TextView)findViewById(R.id.tvPVRIFSCCode);
         continueBtn=(Button)findViewById(R.id.bContinue);
         paymentGatewayLink=(TextView)findViewById(R.id.paymentGatewayLink);
-
+        _UserAccountModel = getIntent().getParcelableExtra("UserAccountModel");
     }
 
 
@@ -158,8 +170,48 @@ public class VendorRegistration extends ActionBarActivity implements View.OnClic
                     shopName.getText()+"", accountNumber.getText()+"",
                     ifscCode.getText()+"", panNo.getText()+"");
 
-            if (message.equals("Completed")){
-                Toast.makeText(getApplicationContext(),"Completed Successfully",Toast.LENGTH_SHORT).show();
+            if (message.equals("Completed")) {
+
+
+                VendorAccount vendorAccount = new VendorAccount(companyName.getText() + "",
+                        shopName.getText() + "",
+                        accountNumber.getText() + "",
+                        ifscCode.getText() + "",
+                        panNo.getText() + "");
+
+                _UserAccountModel.setVendorAccount(vendorAccount);
+
+                final GsonPutRequest<UsersRegistrationStatus> gsonPutRequest =
+                        ApiRequests.getPayObjectArrayWithPut
+                                (
+                                        new Response.Listener<UsersRegistrationStatus>() {
+                                            @Override
+                                            public void onResponse(UsersRegistrationStatus usersRegistrationStatus) {
+                                                // Deal with the DummyObject here
+                                                // mProgressBar.setVisibility(View.GONE);
+                                                // mContent.setVisibility(View.VISIBLE);
+                                                Log.i("ErrorMessage", "3" + usersRegistrationStatus);
+                                                setData(usersRegistrationStatus);
+                                            }
+                                        }
+                                        ,
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                // Deal with the error here
+                                                // mProgressBar.setVisibility(View.GONE);
+                                                //mErrorView.setVisibility(View.VISIBLE);
+                                                Log.i("ErrorMessage", "4");
+                                                //setToast(error);
+                                            }
+                                        }
+                                        ,
+                                        _UserAccountModel,
+                                        getString(R.string.sighnUpUrl)
+                                );
+
+                App.addRequest(gsonPutRequest, Accounts.sTag);
+
             }else {
                 Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
             }
@@ -182,7 +234,11 @@ public class VendorRegistration extends ActionBarActivity implements View.OnClic
             imageOfPANCard.setImageBitmap(resizedBitmap);
         }
     }
-
+    private void setData(@NonNull final UsersRegistrationStatus usersRegistrationStatus) {
+        //mTitle.setText(dummyObject.getPayLoad().get(0).getId());
+        Log.i("ErrorMessage", "2222" + usersRegistrationStatus.getStatusMessage());
+        Toast.makeText(this, usersRegistrationStatus.getStatusMessage(), Toast.LENGTH_LONG).show();
+    }
     private String getRealPathFromURI(Uri selectedImageFromUri) {
         Cursor cursor = getContentResolver().query(selectedImageFromUri, null, null, null, null);
         if (cursor == null) {

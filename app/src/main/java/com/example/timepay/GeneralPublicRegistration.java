@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -20,7 +21,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.example.base.App;
+import com.example.network.ApiRequests;
+import com.example.network.GsonPutRequest;
 import com.example.pojo.UserAccountModel;
+import com.example.pojo.UsersRegistrationStatus;
+import com.example.pojo.accountpojo.PublicAccount;
 import com.example.utils.GroupedInputFormatWatcher;
 
 import java.text.SimpleDateFormat;
@@ -161,8 +169,7 @@ public class GeneralPublicRegistration extends ActionBarActivity implements View
             builder.setInverseBackgroundForced(true);
             builder.create();
             builder.show();
-        }
-       else if (view == expiryYear) {
+        } else if (view == expiryYear) {
 
             Integer currentYear = Integer.parseInt(new SimpleDateFormat("yyyy").format(Calendar.getInstance().getTime()));
             String[] yr = new String[20];
@@ -181,8 +188,7 @@ public class GeneralPublicRegistration extends ActionBarActivity implements View
             builder.setInverseBackgroundForced(true);
             builder.create();
             builder.show();
-        }
-       else if (view == addAnotherCard) {
+        } else if (view == addAnotherCard) {
 
             try {
                 Validator validator = new Validator();
@@ -212,7 +218,7 @@ public class GeneralPublicRegistration extends ActionBarActivity implements View
                     @Override
                     public void onClick(View v) {
                         Validator validator = new Validator();
-                        CardDetails cardDetails=new CardDetails();
+                        CardDetails cardDetails = new CardDetails();
                         try {
                             Log.i("GPR", "hello" + expiryMonthDialog.getText() + "       " + expiryYearDialog.getText() + "");
                             validator.validateCardEmptyDetails(cardNameDialog.getText() + "", cardNoDialog.getText() + "", expiryMonthDialog.getText() + "", expiryYearDialog.getText() + "");
@@ -228,7 +234,7 @@ public class GeneralPublicRegistration extends ActionBarActivity implements View
                             cardDetails.setCardExpiryYear(expiryYearDialog.getText() + "");
                             cardDetailsList.add(cardDetails);
                             for (int i = 0; i < cardDetailsList.size(); i++) {
-                                Log.i("test",cardDetailsList.get(i).getCardName()+"   "+cardDetailsList.get(i).getCardNumber());
+                                Log.i("test", cardDetailsList.get(i).getCardName() + "   " + cardDetailsList.get(i).getCardNumber());
                             }
                         } catch (Exception e) {
                             Toast.makeText(getApplicationContext(), e.getLocalizedMessage() + "", Toast.LENGTH_SHORT).show();
@@ -247,29 +253,78 @@ public class GeneralPublicRegistration extends ActionBarActivity implements View
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), e.getLocalizedMessage() + "", Toast.LENGTH_SHORT).show();
             }
-        }
-        else if (view == continueBtn) {
+        } else if (view == continueBtn) {
             Log.i("GPR", expiryYear.getText() + "" + expiryMonth.getText());
             Validator validator = new Validator();
             try {
                 validator.validateGPR(fullName.getText() + "", address.getText() + "", panNumber.getText() + "");
                 validator.validateCardEmptyDetails(cardName.getText() + "", cardNumber.getText() + "", expiryMonth.getText() + "", expiryYear.getText() + "");
                 validator.validateExpiryDate(expiryMonth.getText() + "", expiryYear.getText() + "");
-                CardDetails cardDetails=new CardDetails();
-                cardDetails.setCardName(cardName.getText()+"");
+                CardDetails cardDetails = new CardDetails();
+                cardDetails.setCardName(cardName.getText() + "");
                 cardDetails.setCardNumber(cardNumber.getText() + "");
                 cardDetails.setCardExpiryMonth(expiryMonth.getText() + "");
                 cardDetails.setCardExpiryYear(expiryYear.getText() + "");
                 cardDetailsList.add(cardDetails);
                 for (int i = 0; i < cardDetailsList.size(); i++) {
-                    Log.i("test",cardDetailsList.get(i).getCardName()+"   "+cardDetailsList.get(i).getCardNumber());
+                    Log.i("test", cardDetailsList.get(i).getCardName() + "   " + cardDetailsList.get(i).getCardNumber());
                 }
-                Toast.makeText(getApplicationContext(), "Completed Successfully", Toast.LENGTH_SHORT).show();
+
+
+                PublicAccount publicAccount = new PublicAccount("cardType",
+                        "cardBankName",
+                        cardName.getText() + "",
+                        "expiryDate",
+                        "validFrom",
+                        cardNumber.getText() + "",
+                        cardName.getText() + "",
+                        address.getText() + "",
+                        panNumber.getText() + "");
+
+                _UserAccountModel.setPublicAccount(publicAccount);
+
+                final GsonPutRequest<UsersRegistrationStatus> gsonPutRequest =
+                        ApiRequests.getPayObjectArrayWithPut
+                                (
+                                        new Response.Listener<UsersRegistrationStatus>() {
+                                            @Override
+                                            public void onResponse(UsersRegistrationStatus usersRegistrationStatus) {
+                                                // Deal with the DummyObject here
+                                                // mProgressBar.setVisibility(View.GONE);
+                                                // mContent.setVisibility(View.VISIBLE);
+                                                Log.i("ErrorMessage", "3");
+                                                Log.i("ErrorMessage", "3" + usersRegistrationStatus);
+                                                setData(usersRegistrationStatus);
+                                            }
+                                        }
+                                        ,
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                // Deal with the error here
+                                                // mProgressBar.setVisibility(View.GONE);
+                                                //mErrorView.setVisibility(View.VISIBLE);
+                                                Log.i("ErrorMessage", "4");
+                                                //setToast(error);
+                                            }
+                                        }
+                                        ,
+                                        _UserAccountModel,
+                                        getString(R.string.sighnUpUrl)
+                                );
+
+                App.addRequest(gsonPutRequest, Accounts.sTag);
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
+    private void setData(@NonNull final UsersRegistrationStatus usersRegistrationStatus) {
+        //mTitle.setText(dummyObject.getPayLoad().get(0).getId());
+        Log.i("ErrorMessage", "2222" + usersRegistrationStatus.getStatusMessage());
+        Toast.makeText(this, usersRegistrationStatus.getStatusMessage(), Toast.LENGTH_LONG).show();
+    }
+
 
     private void deleteItemFromList(final int position) {
         final int deletePosition = position;
@@ -290,8 +345,6 @@ public class GeneralPublicRegistration extends ActionBarActivity implements View
                 for (int i = 0; i < cardDetailsList.size(); i++) {
                     Log.i("test",cardDetailsList.get(i).getCardName()+"   "+cardDetailsList.get(i).getCardNumber());
                 }
-
-
             }
         });
         alert.setNegativeButton("CANCEL", new OnClickListener() {

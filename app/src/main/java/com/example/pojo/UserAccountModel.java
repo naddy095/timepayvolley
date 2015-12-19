@@ -11,6 +11,7 @@ package com.example.pojo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.pojo.accountpojo.PrivilegeVendorAccount;
 import com.example.pojo.accountpojo.PublicAccount;
 
 /**
@@ -20,6 +21,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.example.pojo.accountpojo.PublicAccount;
+import com.example.pojo.accountpojo.VendorAccount;
+import com.example.timepay.PrivilageVendorRegistration;
 
 /**
  * Created by nadeem on 15-11-2015.
@@ -29,6 +32,8 @@ public class UserAccountModel implements Parcelable {
     private String mobileNumber;
     private String orgType;
     private PublicAccount publicAccount;
+    private VendorAccount vendorAccount;
+    private PrivilegeVendorAccount privilegeVendorAccount;
 
     public void setEmail(String email) {
         this.email = email;
@@ -61,6 +66,21 @@ public class UserAccountModel implements Parcelable {
     public void setPublicAccount(PublicAccount publicAccount) {
         this.publicAccount = publicAccount;
     }
+    public VendorAccount getVendorAccount() {
+        return vendorAccount;
+    }
+
+    public void setVendorAccount(VendorAccount vendorAccount) {
+        this.vendorAccount = vendorAccount;
+    }
+
+    public PrivilegeVendorAccount getPrivilegeVendorAccount() {
+        return privilegeVendorAccount;
+    }
+
+    public void setPrivilegeVendorAccount(PrivilegeVendorAccount privilegeVendorAccount) {
+        this.privilegeVendorAccount = privilegeVendorAccount;
+    }
 
     public UserAccountModel() {
 
@@ -78,6 +98,8 @@ public class UserAccountModel implements Parcelable {
         mobileNumber = in.readString();
         orgType = in.readString();
         publicAccount = (PublicAccount) in.readValue(PublicAccount.class.getClassLoader());
+        vendorAccount = (VendorAccount) in.readValue(VendorAccount.class.getClassLoader());
+        privilegeVendorAccount= (PrivilegeVendorAccount) in.readValue(VendorAccount.class.getClassLoader());
     }
 
     @Override
@@ -105,4 +127,5 @@ public class UserAccountModel implements Parcelable {
             return new UserAccountModel[size];
         }
     };
+
 }

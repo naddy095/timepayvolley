@@ -51,7 +51,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
     String onClick;
     UserAccountModel _userAccountModel;
 
-    private static final String sTag = "tagPay";
+    static final String sTag = "tagPay";
 
     private TextView mTitle, mBody;
     private ProgressBar mProgressBar;
@@ -182,7 +182,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                                         // Deal with the error here
                                        // mProgressBar.setVisibility(View.GONE);
                                         //mErrorView.setVisibility(View.VISIBLE);
-                                        SetToast(error);
+                                       // SetToast(error);
                                     }
                                 }
                                 ,
@@ -194,9 +194,9 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         App.addRequest(gsonPostRequest, sTag);
     }
 
-    private void SetToast(VolleyError error) {
+   /* private void SetToast(VolleyError error) {
         Toast.makeText(this,error.getMessage().toString(),Toast.LENGTH_LONG).show();
-    }
+    }*/
 
     /*OkHttpPostHandler handler = new OkHttpPostHandler(this, this, "http://124.153.111.70:8080/project-1.0.0-BUILD-SNAPSHOT/registration", "register");
     String message= validator.validateAccountDetatis(emailAddressET.getText() + "", phoneNumberET.getText() + "");
@@ -230,19 +230,21 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
      */
     private void setData(@NonNull final UsersRegistrationStatus _UsersRegistrationStatus) {
         //mTitle.setText(dummyObject.getPayLoad().get(0).getId());
-        Toast.makeText(this, _UsersRegistrationStatus.getStatusMessage(), Toast.LENGTH_LONG).show();
-        Intent i = new Intent();
-        if(_userAccountModel.getOrgType().equals(OrgEnum.orgType.GPR.getOrgTypeCodeCode())) {
-            i.setClass(this, GeneralPublicRegistration.class);
+        if (_UsersRegistrationStatus.getStatusCode().equals("200")) {
+
+            Intent i = new Intent();
+            if (_userAccountModel.getOrgType().equals(OrgEnum.orgType.GPR.getOrgTypeCodeCode())) {
+                i.setClass(this, GeneralPublicRegistration.class);
+            } else if (_userAccountModel.getOrgType().equals(OrgEnum.orgType.Vendor.getOrgTypeCodeCode())) {
+                i.setClass(this, VendorRegistration.class);
+            } else if (_userAccountModel.getOrgType().equals(OrgEnum.orgType.PrivilageVendor.getOrgTypeCodeCode())) {
+                i.setClass(this, PrivilageVendorRegistration.class);
+            }
+            i.putExtra("UserAccountModel", _userAccountModel);
+            startActivity(i);
+        }else{
+            Toast.makeText(this, _UsersRegistrationStatus.getStatusMessage(), Toast.LENGTH_LONG).show();
         }
-        else if(_userAccountModel.getOrgType().equals(OrgEnum.orgType.Vendor.getOrgTypeCodeCode())) {
-            i.setClass(this, VendorRegistration.class);
-        }
-        else if(_userAccountModel.getOrgType().equals(OrgEnum.orgType.PrivilageVendor)) {
-            i.setClass(this, PrivilageVendorRegistration.class);
-        }
-        i.putExtra("UserAccountModel", _userAccountModel);
-        startActivity(i);
         //mBody.setText(dummyObject.getStatusMessage());
     }
 

@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.example.base.App;
+import com.example.network.ApiRequests;
+import com.example.network.GsonPutRequest;
+import com.example.pojo.UserAccountModel;
+import com.example.pojo.UsersRegistrationStatus;
+import com.example.pojo.accountpojo.PrivilegeVendorAccount;
+import com.example.pojo.accountpojo.PublicAccount;
 
 import java.io.File;
 
@@ -30,17 +41,17 @@ public class PrivilageVendorRegistration extends ActionBarActivity implements Vi
     private static final int LOAD_IMAGE_FROM_GALLERY=1;
 
     Button uploadPAN,continueBtn;
-    EditText companyName ,shopName ,accountNumber, ifscCode,panNo;
+    EditText registeredCompanyId ,shopName ,accountNumber, ifscCode,panNo;
     ImageView imageOfPANCard;
     Intent builderIntent;
     TextView paymentGatewayLink,IFSC, companyID;
+    UserAccountModel _UserAccountModel ;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        Log.i("UsersRegistration33","pawan");
         setContentView(R.layout.activity_privilage_vendor_registration);
         initialize();
         setListener();
@@ -52,13 +63,14 @@ public class PrivilageVendorRegistration extends ActionBarActivity implements Vi
        companyID = (TextView)findViewById(R.id.tvPVRCompanyID);
         uploadPAN=(Button)findViewById(R.id.btnUploadPAN);
         continueBtn=(Button)findViewById(R.id.bContinue);
-        companyName =(EditText)findViewById(R.id.etRegisteredCompanyID);
+        registeredCompanyId =(EditText)findViewById(R.id.etRegisteredCompanyID);
         shopName =(EditText)findViewById(R.id.etShopPublicBrandName);
         accountNumber =(EditText)findViewById(R.id.etAccountNumber);
         ifscCode =(EditText)findViewById(R.id.etPVRIFSCCode);
         panNo =(EditText)findViewById(R.id.etPANNumber);
         imageOfPANCard=(ImageView)findViewById(R.id.ivPANImage);
         paymentGatewayLink=(TextView)findViewById(R.id.paymentGatewayLink);
+        _UserAccountModel = getIntent().getParcelableExtra("UserAccountModel");
 
     }
     private void setListener(){
@@ -105,14 +117,54 @@ public class PrivilageVendorRegistration extends ActionBarActivity implements Vi
         }else if(view==continueBtn){
 
             Validator validator=new Validator();
-            String message= validator.validatePrivilageVendorRegistration(companyName.getText() + "",
+            String message= validator.validatePrivilageVendorRegistration(registeredCompanyId.getText() + "",
                     shopName.getText()+"",
                     accountNumber.getText()+"",
                     ifscCode.getText()+"",
                     panNo.getText()+"");
 
             if (message.equals("Completed")){
-                Toast.makeText(getApplicationContext(), "Completed Successfully", Toast.LENGTH_SHORT).show();
+
+
+                PrivilegeVendorAccount privilegeVendorAccount =new PrivilegeVendorAccount(
+                        registeredCompanyId.getText() + "",
+                        shopName.getText()+"",
+                        accountNumber.getText()+"",
+                        ifscCode.getText()+"",
+                        panNo.getText()+"");
+
+                _UserAccountModel.setPrivilegeVendorAccount(privilegeVendorAccount);
+
+                final GsonPutRequest<UsersRegistrationStatus> gsonPutRequest =
+                        ApiRequests.getPayObjectArrayWithPut
+                                (
+                                        new Response.Listener<UsersRegistrationStatus>() {
+                                            @Override
+                                            public void onResponse(UsersRegistrationStatus usersRegistrationStatus) {
+                                                // Deal with the DummyObject here
+                                                // mProgressBar.setVisibility(View.GONE);
+                                                // mContent.setVisibility(View.VISIBLE);
+                                                Log.i("ErrorMessage", "3" + usersRegistrationStatus);
+                                                setData(usersRegistrationStatus);
+                                            }
+                                        }
+                                        ,
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                // Deal with the error here
+                                                // mProgressBar.setVisibility(View.GONE);
+                                                //mErrorView.setVisibility(View.VISIBLE);
+                                                Log.i("ErrorMessage", "4");
+                                                //setToast(error);
+                                            }
+                                        }
+                                        ,
+                                        _UserAccountModel,
+                                        getString(R.string.sighnUpUrl)
+                                );
+
+                App.addRequest(gsonPutRequest, Accounts.sTag);
             }else {
                 Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
             }
@@ -124,6 +176,11 @@ public class PrivilageVendorRegistration extends ActionBarActivity implements Vi
         }
 
         }
+    private void setData(@NonNull final UsersRegistrationStatus usersRegistrationStatus) {
+        //mTitle.setText(dummyObject.getPayLoad().get(0).getId());
+        Log.i("ErrorMessage", "2222" + usersRegistrationStatus.getStatusMessage());
+        Toast.makeText(this, usersRegistrationStatus.getStatusMessage(), Toast.LENGTH_LONG).show();
+    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Bitmap bitmap;
