@@ -8,14 +8,17 @@ import com.android.volley.Response;
 import com.example.pojo.UserAccountModel;
 import com.example.pojo.UsersRegistrationStatus;
 import com.example.pojo.UsersRegistrationStatustDeserializer;
+import com.example.timepay.CardDetails;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.example.timepay.BuildConfig;
-import java.util.ArrayList;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -184,9 +187,10 @@ public class ApiRequests
     {
         final String url = BuildConfig.apiDomainName + signUpURL;
         String s =null;
+        JsonObject registerParams =  new JsonObject();//(JsonObject) gs.toJsonTree(new CardDetails());
 
-        final JsonObject registerParams = new JsonObject();
         if (userAccountModel.getPublicAccount()!=null) {
+
             registerParams.addProperty("emil", userAccountModel.getEmail());
             registerParams.addProperty("mobileNumber", userAccountModel.getMobileNumber());
             registerParams.addProperty("registrationTypeId", userAccountModel.getPublicAccount().getRegistrationTypeId());
@@ -198,7 +202,14 @@ public class ApiRequests
             registerParams.addProperty("customerName", userAccountModel.getPublicAccount().getFullName());
             registerParams.addProperty("address", userAccountModel.getPublicAccount().getAddress());
             registerParams.addProperty("registeredCompanyId", s);
-            registerParams.addProperty("cardDetails", s);
+
+
+            JsonArray result = (JsonArray) new Gson().toJsonTree(userAccountModel.getPublicAccount().getCardDetailsList(),
+                    new TypeToken<List<CardDetails>>() {
+                    }.getType());
+
+            registerParams.add("cardDetails", result);
+
         }
         else if (userAccountModel.getVendorAccount()!=null) {
             registerParams.addProperty("emil", userAccountModel.getEmail());

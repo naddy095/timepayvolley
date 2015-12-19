@@ -1,5 +1,10 @@
 package com.example.pojo.accountpojo;
 
+import com.example.timepay.CardDetails;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by nadeem on 15-11-2015.
  */
@@ -15,8 +20,11 @@ public class PublicAccount {
     private String fullName;
     private String address;
     private String panNo;
+    List<CardDetails> cardDetailsList=new ArrayList<CardDetails>();
 
-    public PublicAccount(String cardType, String cardBankName, String nameOfCardholder, String expiryDate, String validFrom, String cardNumber, String fullName, String address,String panNo) {
+
+
+    public PublicAccount(String cardType, String cardBankName, String nameOfCardholder, String expiryDate, String validFrom, String cardNumber, String fullName, String address,String panNo,List<CardDetails> cardDetailsList) {
         this.cardType = cardType;
         this.cardBankName = cardBankName;
         this.nameOfCardholder = nameOfCardholder;
@@ -26,6 +34,7 @@ public class PublicAccount {
         this.fullName = fullName;
         this.address = address;
         this.panNo = panNo;
+        this.cardDetailsList=cardDetailsList;
     }
 
     public String getCardType() {
@@ -106,5 +115,13 @@ public class PublicAccount {
 
     public void setRegistrationTypeId(Integer registrationTypeId) {
         this.registrationTypeId = registrationTypeId;
+    }
+
+    public List<CardDetails> getCardDetailsList() {
+        return cardDetailsList;
+    }
+
+    public void setCardDetailsList(List<CardDetails> cardDetailsList) {
+        this.cardDetailsList = cardDetailsList;
     }
 }

@@ -228,13 +228,20 @@ public class GeneralPublicRegistration extends ActionBarActivity implements View
                             adapter.notifyDataSetChanged();
                             adapter.notifyDataSetInvalidated();
                             dialog.dismiss();
-                            cardDetails.setCardName(cardNameDialog.getText() + "");
+                            cardDetails.setCardType("VISA");
+                            cardDetails.setCardHolderName(cardNameDialog.getText() + "");
+                            cardDetails.setCardBankName("sample bank");
+                            cardDetails.setNameOfCardHolder("HDFC");
+                            cardDetails.setExipiryDate(expiryMonthDialog.getText() + "/" + expiryYearDialog.getText());
+                            cardDetails.setValidFrom(expiryMonthDialog.getText() + "/" + expiryYearDialog.getText());
+                            cardDetails.setCvv("123");
                             cardDetails.setCardNumber(cardNoDialog.getText() + "");
+                            /*
                             cardDetails.setCardExpiryMonth(expiryMonthDialog.getText() + "");
-                            cardDetails.setCardExpiryYear(expiryYearDialog.getText() + "");
+                            cardDetails.setCardExpiryYear(expiryYearDialog.getText() + "");*/
                             cardDetailsList.add(cardDetails);
                             for (int i = 0; i < cardDetailsList.size(); i++) {
-                                Log.i("test", cardDetailsList.get(i).getCardName() + "   " + cardDetailsList.get(i).getCardNumber());
+                                Log.i("test", cardDetailsList.get(i).getCardHolderName()+ "   " + cardDetailsList.get(i).getCardNumber());
                             }
                         } catch (Exception e) {
                             Toast.makeText(getApplicationContext(), e.getLocalizedMessage() + "", Toast.LENGTH_SHORT).show();
@@ -261,13 +268,21 @@ public class GeneralPublicRegistration extends ActionBarActivity implements View
                 validator.validateCardEmptyDetails(cardName.getText() + "", cardNumber.getText() + "", expiryMonth.getText() + "", expiryYear.getText() + "");
                 validator.validateExpiryDate(expiryMonth.getText() + "", expiryYear.getText() + "");
                 CardDetails cardDetails = new CardDetails();
-                cardDetails.setCardName(cardName.getText() + "");
+
+
+                cardDetails.setCardType("VISA");
+                cardDetails.setCardHolderName(cardName.getText() + "");
+                cardDetails.setCardBankName("sample bank");
+                cardDetails.setNameOfCardHolder("HDFC");
+                cardDetails.setExipiryDate(expiryMonth.getText() + "/" + expiryYear.getText());
+                cardDetails.setValidFrom(expiryMonth.getText() + "/" + expiryYear.getText());
+                cardDetails.setCvv("123");
                 cardDetails.setCardNumber(cardNumber.getText() + "");
-                cardDetails.setCardExpiryMonth(expiryMonth.getText() + "");
-                cardDetails.setCardExpiryYear(expiryYear.getText() + "");
+
+
                 cardDetailsList.add(cardDetails);
                 for (int i = 0; i < cardDetailsList.size(); i++) {
-                    Log.i("test", cardDetailsList.get(i).getCardName() + "   " + cardDetailsList.get(i).getCardNumber());
+                    Log.i("test", cardDetailsList.get(i).getCardHolderName()+ "   " + cardDetailsList.get(i).getCardNumber());
                 }
 
 
@@ -279,7 +294,8 @@ public class GeneralPublicRegistration extends ActionBarActivity implements View
                         cardNumber.getText() + "",
                         cardName.getText() + "",
                         address.getText() + "",
-                        panNumber.getText() + "");
+                        panNumber.getText() + "",
+                        cardDetailsList   );
 
                 _UserAccountModel.setPublicAccount(publicAccount);
 
@@ -343,7 +359,7 @@ public class GeneralPublicRegistration extends ActionBarActivity implements View
                 adapter.notifyDataSetInvalidated();
 
                 for (int i = 0; i < cardDetailsList.size(); i++) {
-                    Log.i("test",cardDetailsList.get(i).getCardName()+"   "+cardDetailsList.get(i).getCardNumber());
+                    Log.i("test",cardDetailsList.get(i).getCardHolderName()+"   "+cardDetailsList.get(i).getCardNumber());
                 }
             }
         });
