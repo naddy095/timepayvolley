@@ -1,4 +1,4 @@
-package com.example.timepay;
+package com.example.pojo.ComsumerServicePOJO;
 
 
 public class CardDetails {

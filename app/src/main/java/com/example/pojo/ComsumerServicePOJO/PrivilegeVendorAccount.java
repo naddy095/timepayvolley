@@ -1,23 +1,23 @@
-package com.example.pojo.accountpojo;
+package com.example.pojo.ComsumerServicePOJO;
 
 /**
  * Created by nadeem on 15-11-2015.
  */
-public class VendorAccount {
+public class PrivilegeVendorAccount {
 
-    private Integer registrationTypeId=2;
-    private String registeredCompanyName;
+    private Integer registrationTypeId=3;
+    private String registeredCompanyID;
     private String registeredCompanyBrandName;
     private String bankAccountNumber;
     private String ifsc;
     private String panNo;
 
-    public VendorAccount(String registeredCompanyName,
-                         String registeredCompanyBrandName,
-                         String bankAccountNumber,
-                         String ifsc,
-                         String panNo) {
-        this.registeredCompanyName = registeredCompanyName;
+    public PrivilegeVendorAccount(String registeredCompanyID,
+                                  String registeredCompanyBrandName,
+                                  String bankAccountNumber,
+                                  String ifsc,
+                                  String panNo) {
+        this.registeredCompanyID = registeredCompanyID;
         this.registeredCompanyBrandName = registeredCompanyBrandName;
         this.bankAccountNumber = bankAccountNumber;
         this.ifsc = ifsc;
@@ -32,12 +32,12 @@ public class VendorAccount {
         this.registrationTypeId = registrationTypeId;
     }
 
-    public String getRegisteredCompanyName() {
-        return registeredCompanyName;
+    public String getRegisteredCompanyID() {
+        return registeredCompanyID;
     }
 
-    public void setRegisteredCompanyName(String registeredCompanyName) {
-        this.registeredCompanyName = registeredCompanyName;
+    public void setRegisteredCompanyID(String registeredCompanyID) {
+        this.registeredCompanyID = registeredCompanyID;
     }
 
     public String getRegisteredCompanyBrandName() {

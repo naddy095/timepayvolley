@@ -1,29 +1,22 @@
-package com.example.timepay;
-//TODO goes to package -
+package com.example.consumerservices;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.base.App;
 import com.example.network.ApiRequests;
 import com.example.network.GsonPostRequest;
-import com.example.pojo.UserAccountModel;
-import com.example.timepay.OkHttpHandler;
+import com.example.pojo.ComsumerServicePOJO.UserAccountModel;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,25 +26,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pojo.UsersRegistrationStatus;
-import com.example.utils.OkHttpPostHandler;
-import com.example.utils.OnTaskCompleted;
+import com.example.pojo.ComsumerServicePOJO.UsersRegistrationStatus;
+import com.example.timepay.R;
+import com.example.utils.Validator;
 import com.example.utils.OrgEnum;
 import com.example.utils.SharedPreferenceHandler;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class Accounts extends AppCompatActivity implements View.OnClickListener {
+public class ConsumerRegistration extends AppCompatActivity implements View.OnClickListener {
     EditText emailAddressET, phoneNumberET;
     RelativeLayout continueAsGPR, continueAsVR, continueAsPVR;
     String syncedMail;
     String onClick;
     UserAccountModel _userAccountModel;
 
-    static final String sTag = "tagPay";
+    public static final String sTag = "tagPay";
 
     private TextView mTitle, mBody;
     private ProgressBar mProgressBar;
@@ -85,7 +75,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                 Log.i("email", message);
                 if (message.equals("Completed")) {
                     Log.i("email","inside account");
-                    Intent i = new Intent(Accounts.this, ChooseAccountType.class);
+                    Intent i = new Intent(ConsumerRegistration.this, ChooseAccountType.class);
                     startActivity(i);
                 }else {
                     Log.i("email","error");
@@ -101,7 +91,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
         if (!syncedMail.isEmpty()) {
             // Create custom dialog object
-            final Dialog dialog = new Dialog(Accounts.this);
+            final Dialog dialog = new Dialog(ConsumerRegistration.this);
             // Include dialog.xml file
             dialog.setContentView(R.layout.dialogboxforemail);
             // Set dialog title
@@ -173,7 +163,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                                        // mProgressBar.setVisibility(View.GONE);
                                        // mContent.setVisibility(View.VISIBLE);
                                         setData(_UsersRegistrationStatus);
-                                    }
+                                }
                                 }
                                 ,
                                 new Response.ErrorListener() {

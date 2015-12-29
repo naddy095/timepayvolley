@@ -1,4 +1,4 @@
-package com.example.timepay;
+package com.example.consumerservices;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -20,17 +20,18 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.base.App;
 import com.example.network.ApiRequests;
 import com.example.network.GsonPutRequest;
-import com.example.pojo.UserAccountModel;
-import com.example.pojo.UsersRegistrationStatus;
-import com.example.pojo.accountpojo.PublicAccount;
+import com.example.pojo.ComsumerServicePOJO.UserAccountModel;
+import com.example.pojo.ComsumerServicePOJO.UsersRegistrationStatus;
+import com.example.pojo.ComsumerServicePOJO.PublicAccount;
+import com.example.pojo.ComsumerServicePOJO.CardDetails;
+import com.example.timepay.R;
+import com.example.utils.Validator;
 import com.example.utils.GroupedInputFormatWatcher;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -329,7 +330,7 @@ public class GeneralPublicRegistration extends ActionBarActivity implements View
                                         getString(R.string.sighnUpUrl)
                                 );
 
-                App.addRequest(gsonPutRequest, Accounts.sTag);
+                App.addRequest(gsonPutRequest, ConsumerRegistration.sTag);
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }

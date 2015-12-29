@@ -1,4 +1,4 @@
-package com.example.pojo;
+package com.example.pojo.ComsumerServicePOJO;
 
 /**
  * Created by nadeem on 15-11-2015.
@@ -11,18 +11,9 @@ package com.example.pojo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.pojo.accountpojo.PrivilegeVendorAccount;
-import com.example.pojo.accountpojo.PublicAccount;
-
 /**
  * Created by nadeem on 15-11-2015.
  */
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.example.pojo.accountpojo.PublicAccount;
-import com.example.pojo.accountpojo.VendorAccount;
-import com.example.timepay.PrivilageVendorRegistration;
 
 /**
  * Created by nadeem on 15-11-2015.

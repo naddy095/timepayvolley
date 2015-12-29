@@ -38,28 +38,28 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".PrivilageVendorRegistration"
+        <activity android:name="com.example.consumerservices.PrivilageVendorRegistration"
             android:label="PrivilageVendorRegistration"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".Accounts"
+            android:name="com.example.consumerservices.ConsumerRegistration"
             android:label="@string/title_activity_accounts"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ChooseAccountType"
+            android:name="com.example.consumerservices.ChooseAccountType"
             android:label="@string/title_activity_choose_account_type"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".GeneralPublicRegistration"
+            android:name="com.example.consumerservices.GeneralPublicRegistration"
             android:label="@string/title_activity_general_public_registration"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".VendorRegistration"
+            android:name="com.example.consumerservices.VendorRegistration"
             android:label="@string/title_activity_vender_registration"
             android:screenOrientation="portrait">
         </activity>

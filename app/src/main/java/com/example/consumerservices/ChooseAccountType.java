@@ -1,4 +1,4 @@
-package com.example.timepay;
+package com.example.consumerservices;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,9 @@ import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.timepay.R;
+import com.example.timepay.Webview;
 
 
 public class ChooseAccountType extends ActionBarActivity {

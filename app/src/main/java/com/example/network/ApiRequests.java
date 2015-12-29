@@ -5,14 +5,13 @@ import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
-import com.example.pojo.UserAccountModel;
-import com.example.pojo.UsersRegistrationStatus;
-import com.example.pojo.UsersRegistrationStatustDeserializer;
-import com.example.timepay.CardDetails;
+import com.example.pojo.ComsumerServicePOJO.UserAccountModel;
+import com.example.pojo.ComsumerServicePOJO.UsersRegistrationStatus;
+import com.example.pojo.ComsumerServicePOJO.UsersRegistrationStatustDeserializer;
+import com.example.pojo.ComsumerServicePOJO.CardDetails;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.example.timepay.BuildConfig;

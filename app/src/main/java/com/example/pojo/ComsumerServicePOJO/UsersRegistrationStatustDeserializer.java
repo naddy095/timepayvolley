@@ -1,4 +1,4 @@
-package com.example.pojo;
+package com.example.pojo.ComsumerServicePOJO;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

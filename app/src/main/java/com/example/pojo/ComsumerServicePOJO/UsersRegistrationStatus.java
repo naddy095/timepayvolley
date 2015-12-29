@@ -1,4 +1,4 @@
-package com.example.pojo;
+package com.example.pojo.ComsumerServicePOJO;
 
 /**
  * Created by Pawan on 10/31/2015.

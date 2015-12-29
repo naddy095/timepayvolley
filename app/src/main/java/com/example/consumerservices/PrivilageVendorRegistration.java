@@ -1,4 +1,4 @@
-package com.example.timepay;
+package com.example.consumerservices;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,96 +12,90 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.base.App;
 import com.example.network.ApiRequests;
 import com.example.network.GsonPutRequest;
-import com.example.pojo.UserAccountModel;
-import com.example.pojo.UsersRegistrationStatus;
-import com.example.pojo.accountpojo.PublicAccount;
-import com.example.pojo.accountpojo.VendorAccount;
-
+import com.example.pojo.ComsumerServicePOJO.UserAccountModel;
+import com.example.pojo.ComsumerServicePOJO.UsersRegistrationStatus;
+import com.example.pojo.ComsumerServicePOJO.PrivilegeVendorAccount;
+import com.example.timepay.R;
+import com.example.utils.Validator;
+import com.example.timepay.Webview;
 import java.io.File;
 
-
-public class VendorRegistration extends ActionBarActivity implements View.OnClickListener {
+/**
+ * Created by Sahil on 20-06-2015/.
+ */
+public class PrivilageVendorRegistration extends ActionBarActivity implements View.OnClickListener {
 
 
     private static final int CAPTURE_IMAGE_FROM_CAMERA = 0;
     private static final int LOAD_IMAGE_FROM_GALLERY=1;
 
-    EditText companyName ,shopName ,accountNumber, ifscCode,panNo;
-    Button uploadPAN ,continueBtn;
+    Button uploadPAN,continueBtn;
+    EditText registeredCompanyId ,shopName ,accountNumber, ifscCode,panNo;
     ImageView imageOfPANCard;
     Intent builderIntent;
-    TextView paymentGatewayLink,searchIFSCCode;
-    UserAccountModel _UserAccountModel;
+    TextView paymentGatewayLink,IFSC, companyID;
+    UserAccountModel _UserAccountModel ;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vendor_registration);
+        setContentView(R.layout.activity_privilage_vendor_registration);
         initialize();
+        setListener();
+
+    }
+    private void initialize()
+    {
+       IFSC = (TextView)findViewById(R.id.tvPVRIFSCCode);
+       companyID = (TextView)findViewById(R.id.tvPVRCompanyID);
+        uploadPAN=(Button)findViewById(R.id.btnUploadPAN);
+        continueBtn=(Button)findViewById(R.id.bContinue);
+        registeredCompanyId =(EditText)findViewById(R.id.etRegisteredCompanyID);
+        shopName =(EditText)findViewById(R.id.etShopPublicBrandName);
+        accountNumber =(EditText)findViewById(R.id.etAccountNumber);
+        ifscCode =(EditText)findViewById(R.id.etPVRIFSCCode);
+        panNo =(EditText)findViewById(R.id.etPANNumber);
+        imageOfPANCard=(ImageView)findViewById(R.id.ivPANImage);
+        paymentGatewayLink=(TextView)findViewById(R.id.paymentGatewayLink);
+        _UserAccountModel = getIntent().getParcelableExtra("UserAccountModel");
+
+    }
+    private void setListener(){
+        IFSC.setOnClickListener(this);
+        companyID.setOnClickListener(this);
         uploadPAN.setOnClickListener(this);
-        searchIFSCCode.setOnClickListener(this);
         continueBtn.setOnClickListener(this);
         paymentGatewayLink.setOnClickListener(this);
     }
-
-    private void initialize() {
-
-        uploadPAN=(Button)findViewById(R.id.btnUploadPAN);
-        companyName=(EditText)findViewById(R.id.etRegisteredCompanyName);
-        shopName=(EditText)findViewById(R.id.etShopPublicBrandName);
-        accountNumber=(EditText)findViewById(R.id.etAccountNumber);
-        ifscCode=(EditText)findViewById(R.id.etPVRIFSCCode);
-        panNo=(EditText)findViewById(R.id.etPANNumber);
-        imageOfPANCard=(ImageView)findViewById(R.id.ivPANImage);
-        searchIFSCCode = (TextView)findViewById(R.id.tvPVRIFSCCode);
-        continueBtn=(Button)findViewById(R.id.bContinue);
-        paymentGatewayLink=(TextView)findViewById(R.id.paymentGatewayLink);
-        _UserAccountModel = getIntent().getParcelableExtra("UserAccountModel");
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_general_public_registration, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public void onClick(View view) {
-
-        if(view ==uploadPAN){
-            Log.i("VendorRegistration","onclick");
+        if(view==IFSC) {
+            Intent intent = new Intent(PrivilageVendorRegistration.this,Webview.class);
+            intent.putExtra("URL", getString(R.string.IFSC));
+            intent.putExtra("Text",getString(R.string.Text_view_IFSC));
+            startActivity(intent);
+        }else if(view==companyID){
+            Intent intent = new Intent(PrivilageVendorRegistration.this,Webview.class);
+            intent.putExtra("URL", getString(R.string.CompanyID));
+            intent.putExtra("Text",getString(R.string.Text_view_CompanyID));
+            startActivity(intent);
+        }else if(view ==uploadPAN){
+            Log.i("VendorRegistration", "onclick");
             final CharSequence[] uploadPanOptions={"Take a Picture","Choose From Gallery"};
-            AlertDialog.Builder builder=new AlertDialog.Builder(VendorRegistration.this);
+            AlertDialog.Builder builder=new AlertDialog.Builder(PrivilageVendorRegistration.this);
 
             builder.setTitle("Choose Options");
             builder.setItems(uploadPanOptions, new DialogInterface.OnClickListener() {
@@ -120,66 +114,26 @@ public class VendorRegistration extends ActionBarActivity implements View.OnClic
             builder.setInverseBackgroundForced(true);
             builder.create();
             builder.show();
-        }else if(view==paymentGatewayLink) {
-            Intent intent = new Intent(VendorRegistration.this, Webview.class);
-            intent.putExtra("URL", getString(R.string.wvIAree));
-            intent.putExtra("Text",getString(R.string.Text_view_IFSC));
-            startActivity(intent);
-        }
-
-        /*else if (view==expiryMonth)  {'
-            final CharSequence[] mnth={"01(Jan)","02(Feb)","03(Mar)","04(Apr)","05(May)","06(Jun)","07(Jul)","08(Aug)","09(Sep)","10(Oct)","11(Nov)","12(Dec)"};
-            AlertDialog.Builder builder = new AlertDialog.Builder(VendorRegistration.this);
-            builder.setTitle("Select Month");
-            builder.setItems(mnth, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                   // Toast.makeText(getApplicationContext(), "You have selected  " + mnth[which], Toast.LENGTH_LONG).show();
-                    expiryMonth.setText(mnth[which]);
-
-                }
-            });
-            builder.setInverseBackgroundForced(true);
-            builder.create();
-            builder.show();
-        }
-        else if (view==expiryYear) {
-            final CharSequence[] yr={"2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025","2026"};
-            AlertDialog.Builder builder = new AlertDialog.Builder(VendorRegistration.this);
-            builder.setTitle("Select Year");
-            builder.setItems(yr, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                   // Toast.makeText(getApplicationContext(), "You have selected  " + yr[which], Toast.LENGTH_LONG).show();
-                    expiryYear.setText(yr[which]);
-                }
-            });
-            builder.setInverseBackgroundForced(true);
-            builder.create();
-            builder.show();
-        }*/
-
-        else if(view == searchIFSCCode)
-        {
-            Intent intent = new Intent(VendorRegistration.this, Webview.class);
-            intent.putExtra("URL", getString(R.string.IFSC));
-            intent.putExtra("Text",getString(R.string.Text_view_IFSC));
-            startActivity(intent);
-        }else if (view == continueBtn){
+        }else if(view==continueBtn){
 
             Validator validator=new Validator();
-            String message= validator.validateVendorRegistration(companyName.getText()+"",
-                    shopName.getText()+"", accountNumber.getText()+"",
-                    ifscCode.getText()+"", panNo.getText()+"");
+            String message= validator.validatePrivilageVendorRegistration(registeredCompanyId.getText() + "",
+                    shopName.getText()+"",
+                    accountNumber.getText()+"",
+                    ifscCode.getText()+"",
+                    panNo.getText()+"");
 
-            if (message.equals("Completed")) {
+            if (message.equals("Completed")){
 
 
-                VendorAccount vendorAccount = new VendorAccount(companyName.getText() + "",
-                        shopName.getText() + "",
-                        accountNumber.getText() + "",
-                        ifscCode.getText() + "",
-                        panNo.getText() + "");
+                PrivilegeVendorAccount privilegeVendorAccount =new PrivilegeVendorAccount(
+                        registeredCompanyId.getText() + "",
+                        shopName.getText()+"",
+                        accountNumber.getText()+"",
+                        ifscCode.getText()+"",
+                        panNo.getText()+"");
 
-                _UserAccountModel.setVendorAccount(vendorAccount);
+                _UserAccountModel.setPrivilegeVendorAccount(privilegeVendorAccount);
 
                 final GsonPutRequest<UsersRegistrationStatus> gsonPutRequest =
                         ApiRequests.getPayObjectArrayWithPut
@@ -210,13 +164,24 @@ public class VendorRegistration extends ActionBarActivity implements View.OnClic
                                         getString(R.string.sighnUpUrl)
                                 );
 
-                App.addRequest(gsonPutRequest, Accounts.sTag);
-
+                App.addRequest(gsonPutRequest, ConsumerRegistration.sTag);
             }else {
                 Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
             }
+        }else if(view==paymentGatewayLink) {
+            Intent intent = new Intent(PrivilageVendorRegistration.this, Webview.class);
+            intent.putExtra("URL", getString(R.string.wvIAree));
+            intent.putExtra("Text",getString(R.string.Text_view_IFSC));
+            startActivity(intent);
         }
+
+        }
+    private void setData(@NonNull final UsersRegistrationStatus usersRegistrationStatus) {
+        //mTitle.setText(dummyObject.getPayLoad().get(0).getId());
+        Log.i("ErrorMessage", "2222" + usersRegistrationStatus.getStatusMessage());
+        Toast.makeText(this, usersRegistrationStatus.getStatusMessage(), Toast.LENGTH_LONG).show();
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Bitmap bitmap;
         Bitmap resizedBitmap;
@@ -234,11 +199,7 @@ public class VendorRegistration extends ActionBarActivity implements View.OnClic
             imageOfPANCard.setImageBitmap(resizedBitmap);
         }
     }
-    private void setData(@NonNull final UsersRegistrationStatus usersRegistrationStatus) {
-        //mTitle.setText(dummyObject.getPayLoad().get(0).getId());
-        Log.i("ErrorMessage", "2222" + usersRegistrationStatus.getStatusMessage());
-        Toast.makeText(this, usersRegistrationStatus.getStatusMessage(), Toast.LENGTH_LONG).show();
-    }
+
     private String getRealPathFromURI(Uri selectedImageFromUri) {
         Cursor cursor = getContentResolver().query(selectedImageFromUri, null, null, null, null);
         if (cursor == null) {

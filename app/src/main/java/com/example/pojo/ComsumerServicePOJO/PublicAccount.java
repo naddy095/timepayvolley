@@ -1,6 +1,4 @@
-package com.example.pojo.accountpojo;
-
-import com.example.timepay.CardDetails;
+package com.example.pojo.ComsumerServicePOJO;
 
 import java.util.ArrayList;
 import java.util.List;
